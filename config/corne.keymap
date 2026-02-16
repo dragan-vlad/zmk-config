@@ -1,0 +1,87 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+
+#define DEFAULT 0
+#define NUMBERS 1
+#define LINUX   2
+#define RUSSIAN 3
+
+&mt {
+    tapping-term-ms = <200>;
+    flavor = "tap-unless-interrupted";
+};
+
+/ {
+    macros {
+        pass: pass {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp DOT &kp LS(L) &kp O &kp G &kp I &kp M &kp A &kp X &kp DOT>;
+        };
+
+        for_loop: for_loop {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <10>;
+            tap-ms = <10>;
+            bindings = <
+                &kp F &kp O &kp R &kp SPACE 
+                &kp LPAR &kp I &kp N &kp T &kp SPACE 
+                &kp I &kp SPACE &kp EQUAL &kp SPACE 
+                &kp N0 &kp SEMI &kp SPACE &kp I &kp SPACE 
+                &kp LT &kp SPACE &kp SPACE &kp SEMI &kp SPACE 
+                &kp I &kp PLUS &kp PLUS &kp RPAR &kp SPACE 
+                &kp LBRC &kp RBRC &kp LEFT &kp LEFT &kp LEFT 
+                &kp LEFT &kp LEFT &kp LEFT &kp LEFT &kp LEFT 
+                &kp LEFT &kp LEFT &kp LEFT
+            >;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            // -----------------------------------------------------------------------------------------
+            // |  ESC |  Q  |  W  |  F  |  P  |  B  |   |  J  |  L   |  U  |  Y  |  '  | BKSP |
+            // |  TAB |  A  |  R  |  S  |  T  |  G  |   |  M  |  N   |  E  |  I  |  O  | ENT  |
+            // | SHFT | CTRL/Z | CTRL/X | CTRL/C | CTRL/V |  D  |   |  K  |  H   |  ,  |  .  |  /  | ;/CTL|
+            //                    | GUI | NUM | ALT |   | SPC | RSE  |SHIFT |
+            bindings = <
+    &kp ESC   &kp Q &kp W &kp F &kp P &kp B   &kp J &kp L  &kp U     &kp Y   &kp SQT  &kp BKSP
+    &kp TAB   &kp A &kp R &kp S &kp T &kp G   &kp M &kp N  &kp E     &kp I   &kp O    &kp RET
+    &kp LSHFT &mt LCTRL Z &mt LCTRL X &mt LCTRL C &mt LCTRL V &kp D   &kp K &kp H  &kp COMMA &kp DOT &kp FSLH &mt RCTRL SEMI
+                  &kp LGUI &mo NUMBERS &kp LALT   &kp SPACE &mo LINUX &kp RSHIFT
+            >;
+        };
+
+        numbers_layer {
+            // -----------------------------------------------------------------------------------------
+            // | F1 | F2  | F3  | F4  | F5  | F6  |   | F7  | F8   | F9  | F10 | F11 | F12 |
+            // |  = |  1  |  2  |  3  |  4  |  5  |   |  6  |  7   |  8  |  9  |  0  |  +  |
+            // |  ` |  *  |  @  |  $  |  %  |  &  |   |  \  |  [   |  ]  |  (  |  )  |  -  |
+            //                    |     |     |     |   |     |     |     |
+            bindings = <
+    &kp F1    &kp F2    &kp F3 &kp F4    &kp F5    &kp F6       &kp F7   &kp F8   &kp F9   &kp F10  &kp F11  &kp F12
+    &kp EQUAL &kp N1    &kp N2 &kp N3    &kp N4    &kp N5       &kp N6   &kp N7   &kp N8   &kp N9   &kp N0   &kp PLUS
+    &kp GRAVE &kp ASTRK &kp AT &kp DLLR  &kp PRCNT &kp AMPS     &kp BSLH &kp LBKT &kp RBKT &kp LPAR &kp RPAR &kp MINUS
+                               &trans    &trans    &trans       &trans   &trans   &trans
+            >;
+        };
+
+        linux_layer {
+            // -----------------------------------------------------------------------------------------
+            // |User|     |     |     |     |     |   |     |      |     |  gg  |      | PGUP  |
+            // |For |     |     |     |     |     |   |     |      |     |  G   |  UP  |PGDOWN |
+            // |    |     |     |     |     |     |   |     |      |     | LEFT | DOWN | RIGHT |
+            //                  |     |     |     |   |     |      |     |
+            bindings = <
+    &pass      &none &none &none &none &none        &none &none &none &kp LC(HOME) &none    &kp PG_UP
+    &for_loop  &none &none &none &none &none        &none &none &none &kp LC(END)  &kp UP   &kp PG_DN
+    &trans     &none &none &none &none &none        &none &none &none &kp LEFT     &kp DOWN &kp RIGHT
+                           &trans &trans &trans     &trans &trans &trans
+            >;
+        };
+    };
+};
