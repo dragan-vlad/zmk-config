@@ -8,16 +8,11 @@
         compatible = "zmk,keymap";
 
         default_layer {
-            // -----------------------------------------------------------------------------------------
-            // | BOOT | USB_OUT|  W  |  F  |  P  |  B  |   |  J  |  L   |  U  |  Y  |  '  | BKSP |
-            // | TAB  |  A     |  R  |  S  |  T  |  G  |   |  M  |  N   |  E  |  I  |  O  | ENT  |
-            // | SHFT |  Z     |  X  |  C  |  V  |  D  |   |  K  |  H   |  ,  |  .  |  /  | CTRL |
-            //                    | GUI | LWR | ALT |   | SPC | RSE  | ALT |
             bindings = <
     &bootloader  &out OUT_USB  &kp W  &kp F  &kp P  &kp B      &kp J  &kp L  &kp U      &kp Y    &kp SQT  &kp BKSP
     &kp TAB      &kp A        &kp R  &kp S  &kp T  &kp G      &kp M  &kp N  &kp E      &kp I    &kp O    &kp RET
     &kp LSHFT    &kp Z        &kp X  &kp C  &kp V  &kp D      &kp K  &kp H  &kp COMMA  &kp DOT  &kp FSLH &kp RCTRL
-                               &kp LGUI &none  &kp LALT   &kp SPACE &none  &kp RSHIFT
+                               &kp LGUI &none &kp LALT   &kp SPACE &none &kp RSHIFT
             >;
         };
     };
