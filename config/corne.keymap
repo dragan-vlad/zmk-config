@@ -3,9 +3,9 @@
 #include <dt-bindings/zmk/bt.h>
 
 #define COLEMAK 0
-#define NUMBERS 1
-#define LINUX   2
-#define RUSSIAN 3
+#define RUSSIAN 1
+#define NUMBERS 2
+#define LINUX   3
 
 &mt {
     tapping-term-ms = <200>;
