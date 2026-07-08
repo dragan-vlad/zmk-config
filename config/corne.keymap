@@ -1,8 +1,9 @@
+```dts
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 
-#define DEFAULT 0
+#define COLEMAK 0
 #define NUMBERS 1
 #define LINUX   2
 #define RUSSIAN 3
@@ -14,10 +15,16 @@
 
 / {
     behaviors {
+        bspc_del: backspace_delete {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp BKSP>, <&kp DEL>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
         ht_sc: hold_tap_shortcut {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>;
-            flavor = "tap-unless-interrupted";
+            flavor = "hold-preferred";
             tapping-term-ms = <200>;
             bindings = <&kp>, <&kp>;
         };
@@ -36,44 +43,56 @@
 
         default_layer {
             // -----------------------------------------------------------------------------------------
-            // |  ESC |  Q  |  W  |  F  |  P  |  B  |   |  J  |  L   |  U  |  Y  |  '  | BKSP |
+            // |  ESC |  Q  |  W  |  F  |  P  |  B  |   |  J  |  L   |  U  |  Y  |  '  | BKSP/DEL |
             // |  TAB |  A  |  R  |  S  |  T  |  G  |   |  M  |  N   |  E  |  I  |  O  | ENT  |
-            // | SHFT | CTRL/Z | CTRL/X | CTRL/C | CTRL/V |  D  |   |  K  |  H   |  ,  |  .  |  /  | ;/CTL|
-            //                    | GUI | NUM | ALT |   | SPC | RSE  |SHIFT |
+            // | SHFT | CTRL/Z | CTRL/X | CTRL/C | CTRL/V |  D  |   |  K  |  H   |  ,  |  .  |  /  | ;/CTRL |
+            //                    | GUI | NUM | ALT |   | SPC | LINUX |    |
             bindings = <
-    &kp ESC   &kp Q &kp W &kp F &kp P &kp B   &kp J &kp L  &kp U      &kp Y   &kp SQT  &kp BKSP
+    &kp ESC   &kp Q &kp W &kp F &kp P &kp B   &kp J &kp L  &kp U      &kp Y   &kp SQT  &bspc_del
     &kp TAB   &kp A &kp R &kp S &kp T &kp G   &kp M &kp N  &kp E      &kp I   &kp O    &kp RET
-    &kp LSHFT &ht_sc LC(Z) Z &ht_sc LC(X) X  &ht_sc LC(C) C &ht_sc LC(V) V &kp D   &kp K &kp H  &kp COMMA &kp DOT &kp FSLH &mt RCTRL SEMI
-                  &kp LGUI &mo NUMBERS &kp LALT   &kp SPACE &mo LINUX &kp RSHIFT
+    &kp LSHFT &ht_sc LC(Z) Z &ht_sc LC(X) X  &ht_sc LC(C) C &ht_sc LC(V) V &kp D   &kp K &kp H  &kp COMMA &kp DOT &kp FSLH &mt LCTRL SEMI
+                  &kp LGUI &mo NUMBERS &kp LALT   &kp SPACE &mo LINUX &none
             >;
         };
 
         numbers_layer {
             // -----------------------------------------------------------------------------------------
             // | F1 | F2  | F3  | F4  | F5  | F6  |   | F7  | F8   | F9  | F10 | F11 | F12 |
-            // |  = |  1  |  2  |  3  |  4  |  5  |   |  6  |  7   |  8  |  9  |  0  |  +  |
-            // |  ` |  * |  @  |  $  |  %  |  &  |   |  \  |  [   |  ]  |  (  |  )  |  -  |
+            // |  ` |  1  |  2  |  3  |  4  |  5  |   |  6  |  7   |  8  |  9  |  0  |  =  |
+            // | SHFT |  * |  @  |  $  |  %  |  &  |   |  \  |  [   |  ]  |  (  |  )  |  -  |
             //                    |     |     |     |   |     |      |     |
             bindings = <
     &kp F1    &kp F2    &kp F3 &kp F4    &kp F5    &kp F6       &kp F7   &kp F8   &kp F9   &kp F10  &kp F11  &kp F12
-    &kp EQUAL &kp N1    &kp N2 &kp N3    &kp N4    &kp N5       &kp N6   &kp N7   &kp N8   &kp N9   &kp N0   &kp PLUS
-    &kp GRAVE &kp ASTRK &kp AT &kp DLLR  &kp PRCNT &kp AMPS     &kp BSLH &kp LBKT &kp RBKT &kp LPAR &kp RPAR &kp MINUS
+    &kp GRAVE &kp N1    &kp N2 &kp N3    &kp N4    &kp N5       &kp N6   &kp N7   &kp N8   &kp N9   &kp N0   &kp EQUAL
+    &kp LSHIFT &kp ASTRK &kp AT &kp DLLR  &kp PRCNT &kp AMPS     &kp BSLH &kp LBKT &kp RBKT &kp LPAR &kp RPAR &kp MINUS
                                &trans    &trans    &trans       &trans   &trans   &trans
             >;
         };
 
         linux_layer {
             // -----------------------------------------------------------------------------------------
-            // |User|     |     |     |     |     |   |     |      |     |  gg  |      | PGUP  |
-            // |For |     |     |     |     |     |   |     |      |     |  G   |  UP  |PGDOWN |
-            // |    |     |     |     |     |     |   |     |      |     | LEFT | DOWN | RIGHT |
-            //                    |     |     |     |   |     |      |     |
+            // |User| BL_0 | BL_1 | BL_2 | BL_3 | CLR |     | RESET |      |       | HOME | DEL  | PGUP  |
+            // |    | ENG | RUS |     |     |     |         | LOAD  |      |       | END  |  UP  |PGDOWN |
+            // |    |     |     |     |     |     |         |       |      |       | LEFT | DOWN | RIGHT |
+            //                    |     |     |     |          |     |      |     |
             bindings = <
-    &pass      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR      &sys_reset &none &none &kp LC(HOME) &none    &kp PG_UP
-    &none      &none        &none        &none        &none        &none           &bootloader &none &none &kp LC(END)  &kp UP   &kp PG_DN
-    &trans     &none        &none        &none        &none        &none           &none &none &none &kp LEFT     &kp DOWN &kp RIGHT
-                                         &trans       &trans       &trans          &trans &trans &trans
+    &pass      &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_CLR      &sys_reset &none &none &kp LC(HOME) &kp DEL &kp PG_UP
+    &none      &to COLEMAK       &to RUSSIAN       &none &none &none               &bootloader &none &none &kp LC(END)  &kp UP   &kp PG_DN
+    &trans     &none       &none       &none &none &none                           &none &none &none &kp LEFT     &kp DOWN &kp RIGHT
+                                       &trans &trans &trans                              &trans &trans &trans
+            >;
+        };
+
+        russian_layer {
+            // Placeholder for your Russian layout
+            bindings = <
+    &kp ESC   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I   &kp O   &kp P    &kp BKSP
+    &kp TAB   &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K   &kp L   &kp SEMI &kp RET
+    &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp RCTRL
+                  &kp LCTRL &kp LGUI &kp LALT   &kp SPACE &mo LINUX &mo NUMBERS
             >;
         };
     };
 };
+
+```
